@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 import 'utils/app_colors.dart';
-import 'screens/login_screen.dart';
+import 'screens/splash_screen.dart';
 
 void main() {
   runApp(const InterlakenApp());
@@ -22,7 +22,7 @@ class InterlakenApp extends StatelessWidget {
           foregroundColor: Colors.white,
         ),
       ),
-      home: const LoginScreen(),
+      home: const SplashScreen(),
     );
   }
 }

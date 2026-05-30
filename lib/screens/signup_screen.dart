@@ -17,21 +17,49 @@ class _SignupScreenState extends State<SignupScreen> {
 
   bool hidePassword = true;
 
+  bool isValidEmail(String email) {
+    return RegExp(r'^[\w\.-]+@([\w-]+\.)+[\w-]{2,4}$').hasMatch(email);
+  }
+
+  bool isValidPassword(String password) {
+    return RegExp(r'^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{6,}$').hasMatch(password);
+  }
+
   Future<void> signup() async {
-    if (nameController.text.trim().isEmpty ||
-        emailController.text.trim().isEmpty ||
-        passwordController.text.trim().isEmpty) {
+    final name = nameController.text.trim();
+    final email = emailController.text.trim();
+    final password = passwordController.text.trim();
+
+    if (name.isEmpty || email.isEmpty || password.isEmpty) {
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(const SnackBar(content: Text('Please fill all fields')));
+      return;
+    }
+
+    if (!isValidEmail(email)) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Please fill all fields')),
+        const SnackBar(content: Text('Please enter a valid email address')),
+      );
+      return;
+    }
+
+    if (!isValidPassword(password)) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text(
+            'Password must contain uppercase, lowercase, number and be at least 6 characters',
+          ),
+        ),
       );
       return;
     }
 
     final prefs = await SharedPreferences.getInstance();
 
-    await prefs.setString('user_name', nameController.text.trim());
-    await prefs.setString('user_email', emailController.text.trim());
-    await prefs.setString('user_password', passwordController.text.trim());
+    await prefs.setString('user_name', name);
+    await prefs.setString('user_email', email);
+    await prefs.setString('user_password', password);
 
     if (!mounted) return;
 
@@ -41,9 +69,7 @@ class _SignupScreenState extends State<SignupScreen> {
 
     Navigator.pushReplacement(
       context,
-      MaterialPageRoute(
-        builder: (_) => const LoginScreen(),
-      ),
+      MaterialPageRoute(builder: (_) => const LoginScreen()),
     );
   }
 
@@ -59,12 +85,15 @@ class _SignupScreenState extends State<SignupScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: const Color(0xFFF8F9FC),
+
       appBar: AppBar(
         title: const Text('Create Account'),
         backgroundColor: const Color(0xFF1D4ED8),
       ),
+
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(24),
+
         child: Column(
           children: [
             const SizedBox(height: 30),
@@ -81,6 +110,7 @@ class _SignupScreenState extends State<SignupScreen> {
               controller: nameController,
               decoration: InputDecoration(
                 labelText: 'Full Name',
+                helperText: 'Example: John Smith',
                 prefixIcon: const Icon(Icons.person),
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(14),
@@ -95,6 +125,7 @@ class _SignupScreenState extends State<SignupScreen> {
               keyboardType: TextInputType.emailAddress,
               decoration: InputDecoration(
                 labelText: 'Email Address',
+                helperText: 'Example: john@gmail.com',
                 prefixIcon: const Icon(Icons.email),
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(14),
@@ -109,6 +140,8 @@ class _SignupScreenState extends State<SignupScreen> {
               obscureText: hidePassword,
               decoration: InputDecoration(
                 labelText: 'Password',
+                helperText:
+                    'Example: Password1 (uppercase, lowercase, number, min 6 chars)',
                 prefixIcon: const Icon(Icons.lock),
                 suffixIcon: IconButton(
                   icon: Icon(
@@ -142,7 +175,7 @@ class _SignupScreenState extends State<SignupScreen> {
                 ),
                 child: const Text(
                   'Sign Up',
-                  style: TextStyle(fontWeight: FontWeight.bold),
+                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
                 ),
               ),
             ),
