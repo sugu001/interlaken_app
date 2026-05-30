@@ -47,7 +47,7 @@ class _ManageAttractionsScreenState extends State<ManageAttractionsScreen> {
     descriptionController.clear();
 
     ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(content: Text('Attraction added')),
+      const SnackBar(content: Text('Attraction added successfully')),
     );
   }
 
@@ -57,8 +57,42 @@ class _ManageAttractionsScreenState extends State<ManageAttractionsScreen> {
     });
 
     ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(content: Text('Attraction removed')),
+      const SnackBar(content: Text('Attraction removed successfully')),
     );
+  }
+
+  Future<void> confirmDelete(int index) async {
+    final result = await showDialog<bool>(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text('Delete Attraction'),
+        content: const Text(
+          'Are you sure you want to delete this attraction?',
+        ),
+        actions: [
+          TextButton(
+            onPressed: () {
+              Navigator.pop(context, false);
+            },
+            child: const Text('Cancel'),
+          ),
+          ElevatedButton(
+            style: ElevatedButton.styleFrom(
+              backgroundColor: Colors.red,
+              foregroundColor: Colors.white,
+            ),
+            onPressed: () {
+              Navigator.pop(context, true);
+            },
+            child: const Text('Delete'),
+          ),
+        ],
+      ),
+    );
+
+    if (result == true) {
+      removeAttraction(index);
+    }
   }
 
   @override
@@ -82,9 +116,12 @@ class _ManageAttractionsScreenState extends State<ManageAttractionsScreen> {
           children: [
             TextField(
               controller: nameController,
-              decoration: const InputDecoration(
+              decoration: InputDecoration(
                 labelText: 'Attraction Name',
-                border: OutlineInputBorder(),
+                prefixIcon: const Icon(Icons.place),
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(14),
+                ),
               ),
             ),
 
@@ -92,9 +129,12 @@ class _ManageAttractionsScreenState extends State<ManageAttractionsScreen> {
 
             TextField(
               controller: locationController,
-              decoration: const InputDecoration(
+              decoration: InputDecoration(
                 labelText: 'Location',
-                border: OutlineInputBorder(),
+                prefixIcon: const Icon(Icons.location_on),
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(14),
+                ),
               ),
             ),
 
@@ -103,9 +143,12 @@ class _ManageAttractionsScreenState extends State<ManageAttractionsScreen> {
             TextField(
               controller: descriptionController,
               maxLines: 3,
-              decoration: const InputDecoration(
+              decoration: InputDecoration(
                 labelText: 'Description',
-                border: OutlineInputBorder(),
+                prefixIcon: const Icon(Icons.description),
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(14),
+                ),
               ),
             ),
 
@@ -113,9 +156,12 @@ class _ManageAttractionsScreenState extends State<ManageAttractionsScreen> {
 
             DropdownButtonFormField<String>(
               value: selectedCategory,
-              decoration: const InputDecoration(
+              decoration: InputDecoration(
                 labelText: 'Category',
-                border: OutlineInputBorder(),
+                prefixIcon: const Icon(Icons.category),
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(14),
+                ),
               ),
               items: const [
                 DropdownMenuItem(value: 'S', child: Text('Scenic')),
@@ -135,14 +181,20 @@ class _ManageAttractionsScreenState extends State<ManageAttractionsScreen> {
 
             SizedBox(
               width: double.infinity,
-              height: 50,
+              height: 52,
               child: ElevatedButton.icon(
                 onPressed: addAttraction,
                 icon: const Icon(Icons.add),
-                label: const Text('Add Attraction'),
+                label: const Text(
+                  'Add Attraction',
+                  style: TextStyle(fontWeight: FontWeight.bold),
+                ),
                 style: ElevatedButton.styleFrom(
                   backgroundColor: const Color(0xFF1D4ED8),
                   foregroundColor: Colors.white,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(14),
+                  ),
                 ),
               ),
             ),
@@ -170,6 +222,7 @@ class _ManageAttractionsScreenState extends State<ManageAttractionsScreen> {
                 final attraction = attractions[index];
 
                 return Card(
+                  margin: const EdgeInsets.only(bottom: 10),
                   child: ListTile(
                     leading: CircleAvatar(
                       backgroundImage: AssetImage(attraction.image),
@@ -177,9 +230,12 @@ class _ManageAttractionsScreenState extends State<ManageAttractionsScreen> {
                     title: Text(attraction.name),
                     subtitle: Text(attraction.location),
                     trailing: IconButton(
-                      icon: const Icon(Icons.delete, color: Colors.red),
+                      icon: const Icon(
+                        Icons.delete,
+                        color: Colors.red,
+                      ),
                       onPressed: () {
-                        removeAttraction(index);
+                        confirmDelete(index);
                       },
                     ),
                   ),
