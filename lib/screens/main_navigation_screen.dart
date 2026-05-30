@@ -32,7 +32,7 @@ class _MainNavigationScreenState extends State<MainNavigationScreen> {
     final email = prefs.getString('user_email') ?? '';
 
     setState(() {
-      isAdmin = email.toLowerCase() == 'ckeykim@gmail.com';
+      isAdmin = email.toLowerCase() == 'bs@gmail.com';
     });
   }
 
@@ -46,18 +46,12 @@ class _MainNavigationScreenState extends State<MainNavigationScreen> {
     ];
 
     final items = [
-      const BottomNavigationBarItem(
-        icon: Icon(Icons.home),
-        label: 'Home',
-      ),
+      const BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Home'),
       const BottomNavigationBarItem(
         icon: Icon(Icons.favorite),
         label: 'Favorites',
       ),
-      const BottomNavigationBarItem(
-        icon: Icon(Icons.person),
-        label: 'Profile',
-      ),
+      const BottomNavigationBarItem(icon: Icon(Icons.person), label: 'Profile'),
       if (isAdmin)
         const BottomNavigationBarItem(
           icon: Icon(Icons.dashboard),
@@ -145,10 +139,7 @@ class _FavoritesScreenState extends State<FavoritesScreen> {
                     ),
                     title: Text(attraction.name),
                     subtitle: Text(attraction.location),
-                    trailing: const Icon(
-                      Icons.favorite,
-                      color: Colors.red,
-                    ),
+                    trailing: const Icon(Icons.favorite, color: Colors.red),
                   ),
                 );
               },
@@ -218,9 +209,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
     Navigator.pushReplacement(
       context,
-      MaterialPageRoute(
-        builder: (_) => const LoginScreen(),
-      ),
+      MaterialPageRoute(builder: (_) => const LoginScreen()),
     );
   }
 
@@ -248,11 +237,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     ? FileImage(File(profileImagePath!))
                     : null,
                 child: profileImagePath == null
-                    ? const Icon(
-                        Icons.person,
-                        size: 60,
-                        color: Colors.white,
-                      )
+                    ? const Icon(Icons.person, size: 60, color: Colors.white)
                     : null,
               ),
             ),
@@ -268,20 +253,14 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
             Text(
               userName,
-              style: const TextStyle(
-                fontSize: 24,
-                fontWeight: FontWeight.bold,
-              ),
+              style: const TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
             ),
 
             const SizedBox(height: 8),
 
             Text(
               userEmail,
-              style: const TextStyle(
-                color: Colors.grey,
-                fontSize: 16,
-              ),
+              style: const TextStyle(color: Colors.grey, fontSize: 16),
             ),
 
             const SizedBox(height: 35),
@@ -296,10 +275,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 child: Column(
                   children: [
                     ListTile(
-                      leading: const Icon(
-                        Icons.favorite,
-                        color: Colors.red,
-                      ),
+                      leading: const Icon(Icons.favorite, color: Colors.red),
                       title: const Text('Favorite Attractions'),
                       trailing: Container(
                         padding: const EdgeInsets.symmetric(
@@ -312,9 +288,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         ),
                         child: Text(
                           favoriteCount.toString(),
-                          style: const TextStyle(
-                            fontWeight: FontWeight.bold,
-                          ),
+                          style: const TextStyle(fontWeight: FontWeight.bold),
                         ),
                       ),
                     ),
@@ -324,13 +298,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     SwitchListTile(
                       value: notificationsEnabled,
                       onChanged: (value) async {
-                        final prefs =
-                            await SharedPreferences.getInstance();
+                        final prefs = await SharedPreferences.getInstance();
 
-                        await prefs.setBool(
-                          'notifications_enabled',
-                          value,
-                        );
+                        await prefs.setBool('notifications_enabled', value);
 
                         setState(() {
                           notificationsEnabled = value;
@@ -375,10 +345,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 icon: const Icon(Icons.logout),
                 label: const Text(
                   'Logout',
-                  style: TextStyle(
-                    fontWeight: FontWeight.bold,
-                    fontSize: 16,
-                  ),
+                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
                 ),
                 style: ElevatedButton.styleFrom(
                   backgroundColor: Colors.red,
